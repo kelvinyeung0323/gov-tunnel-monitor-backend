@@ -1,0 +1,36 @@
+{{ define "data_fields"}}
+id,device_id,device_name,device_type,origin_data,device_status,data,remark,data_time
+{{ end }}
+ 
+
+{{/* 保存监控数据 */}}
+{{ define "persistMonitorData"}}
+insert into gtm_monitor_data({{ template "data_fields" }}) 
+values 
+({{val .Id}},{{val .DeviceId}},{{val .DeviceName}},{{val .DeviceType}},{{val .OriginData}},{{val .DeviceStatus}},{{val .Data}},{{val .Remark}},{{val .DataTime}})
+{{end}}
+
+
+
+{{/* 查询用户 */}}
+{{ define "queryMonitorData"}}
+select {{template "data_fields"}}
+from gtm_monitor_data
+where
+1 = 1
+{{if .DeivceName}}
+and device_name like '%{{rawVal .DeivceName}}%'
+{{end}}
+{{if .DeviceType}}
+and device_type = {{val .DeviceType}}
+{{end}}
+{{if .DeviceStatus}}
+and device_status = {{val .DeviceStatus}}
+{{end}}
+{{if .StartTime}}
+and data_time >= {{val .StartTime}}
+{{end}}
+{{if .EndTime}}
+and data_time <= {{val .EndTime}}
+{{end}}
+{{end}}

@@ -1,0 +1,66 @@
+{{ define "user_fields"}}
+user_id,user_name,login_name,password,last_login_time,updated_at,created_at
+{{ end }}
+
+{{/* 根据ID获取用户 */}}
+{{ define "getUserById"}}
+select 
+{{ template "user_fields"}}
+from sys_user 
+where user_id = {{.}}
+{{end}}
+
+
+{{/* 根据名称获取用户 */}}
+{{ define "getUserByName"}}
+select 
+{{ template "user_fields"}}
+from sys_user 
+where login_name = {{.}}
+{{end}}
+
+
+{{/* 创建用户 */}}
+{{ define "createUser"}}
+insert into sys_user({{ template "user_fields" }}) 
+values 
+({{val .UserId}},{{val .UserName}},{{val .LoginName}},{{val .Password}},{{val .LastLoginTime}},{{val .UpdatedAt}},{{val .CreatedAt}})
+{{end}}
+
+{{/* 删除用户 */}}
+{{ define "deleteUser"}}
+delete from sys_user where user_id = {{.}}
+{{end}}
+
+{{/* 更新用户 */}}
+{{ define "updateUser"}}
+update sys_user
+set user_name = {{val .Username}},login_name = {{val .LoginName}}
+where user_id  = {{.UserId}}
+{{end}}
+
+
+{{/* 更新用户密码 */}}
+{{ define "changeUserPasswd"}}
+update sys_user
+set password = {{val .Password}}
+where user_id  = {{.UserId}}
+{{end}}
+
+
+{{/* 查询用户 */}}
+{{ define "queryUsers"}}
+select {{template "user_fields"}}
+from sys_user
+where
+1 = 1
+{{if .Username}}
+and user_name like '%{{rawVal .Username}}%'
+{{end}}
+{{end}}
+
+
+{{/*更新最后登录时间*/}}
+{{ define "updateLoginTime"}}
+update sys_user set last_login_time = {{.LastLoginTime}} where user_id = {{.UserId}}
+{{end}}

@@ -1,0 +1,89 @@
+{{ define "device_fields"}}
+device_id,device_name,ip,port,type,status,description,setup_addr,created_at,created_by,updated_at,updated_by,fault_cause,refreshed_at,rtsp,addr_code
+{{ end }}
+
+{{/* 根据ID获取用户 */}}
+{{ define "getDeviceById"}}
+select 
+{{ template "device_fields"}}
+from gtm_device 
+where device_id = {{.}}
+{{end}}
+
+{{/* 创建用户 */}}
+{{ define "createDevice"}}
+insert into gtm_device({{ template "device_fields" }}) 
+values 
+({{val .DeviceId}},{{val .DeviceName}},{{val .Ip}},{{val .Port}},{{val .Type}},{{val .Status}},{{val .Description}},{{val .SetupAddr}},{{val .CreatedAt}},{{val .CreatedBy}},{{val .UpdatedAt}},{{val .UpdatedBy}},{{val .FaultCause}},{{val .RefreshedAt}},{{val .Rtsp}},{{val .AddrCode}})
+{{end}}
+
+{{/* 删除用户 */}}
+{{ define "deleteDevice"}}
+delete from gtm_device where device_id = {{.}}
+{{end}}
+
+{{/* 删除多个设备 */}}
+{{ define "deleteDevices"}}
+delete from gtm_device where device_id in ( {{join .}} )
+{{end}}
+
+{{/* 更新设备 */}}
+{{ define "updateDevice"}}
+update gtm_device
+set
+device_id = {{val .DeviceId}},
+device_name = {{val .DeviceName}},
+ip = {{val .Ip}},
+port = {{val .Port}},
+type = {{val .Type}},
+status = {{val .Status}},
+description = {{val .Description}},
+setup_addr = {{val .SetupAddr}},
+updated_by = {{val .UpdatedBy}},
+updated_at = {{val .UpdatedAt}},
+fault_cause = {{val .FaultCause}},
+refreshed_ad = {{val .RefreshedAt}},
+rtsp = {{val .Rtsp}}
+addr_code = {{val .AddrCode}}
+where device_id  = {{.DeviceId}}
+{{end}}
+
+ 
+ {{/* 更新设备状态 */}}
+{{ define "updateDeviceStatus"}}
+update gtm_device
+set
+status = {{val .Status}},
+fault_cause = {{val .FaultCause}}
+where device_id  = {{.DeviceId}}
+{{end}}
+
+{{/* 查询设备 */}}
+{{ define "queryDevices"}}
+select {{template "device_fields"}}
+from gtm_device
+where
+1 = 1
+{{if .DeivceName}}
+and device_name like '%{{rawVal .DeivceName}}%'
+{{end}}
+{{if .type}}
+and type = {{val .type}}
+{{end}}
+{{end}}
+
+
+
+{{/* 获取所有设备 */}}
+{{ define "getAllDevices"}}
+select {{template "device_fields"}}
+from gtm_device
+where
+1 = 1
+{{if .DeivceName}}
+and device_name like '%{{rawVal .DeivceName}}%'
+{{end}}
+{{if .type}}
+and type = {{val .type}}
+{{end}}
+{{end}}

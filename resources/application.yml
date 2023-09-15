@@ -1,0 +1,12 @@
+app:
+  port: 9090
+
+
+datasource:
+  mysql: 
+    url: (localhost:3306)/go-tunnel?charset=utf8&parseTime=True&loc=UTC
+    username: root
+    password: 123456
+
+
+    
